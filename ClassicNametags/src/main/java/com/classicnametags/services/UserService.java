@@ -1,10 +1,14 @@
 package com.classicnametags.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import com.classicnametags.models.Item;
 import com.classicnametags.models.User;
 import com.classicnametags.repositories.UserRepository;
 
@@ -58,11 +62,18 @@ public class UserService {
 		}
 	}
 	
+	public User findUserById(Long id) {
+		return uRepo.findById(id).get();
+	}
+	
 	public void login(HttpSession session, User user) {
+		List<Item> cart = new ArrayList<Item>();
 		session.setAttribute("userId", user.getId());
 		session.setAttribute("userName", user.getUserName());
 		session.setAttribute("permissions", user.getType());
 		session.setAttribute("loggedIn", true);
+		session.setAttribute("myCart", cart);
+		session.setAttribute("cartTotal", 0f);
 	}
 	
 	public void logout(HttpSession session) {
@@ -70,6 +81,8 @@ public class UserService {
 		session.setAttribute("userName", "Guest");
 		session.setAttribute("permissions", "customer");
 		session.setAttribute("loggedIn", false);
+		session.setAttribute("myCart", null);
+		session.setAttribute("cartTotal", 0f);
 	}
 	
 	public boolean isEmployee(HttpSession session) {

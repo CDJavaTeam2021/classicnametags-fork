@@ -46,8 +46,12 @@ public class Item {
 	private Product itemProduct;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="order_id", updatable = false)
+	@JoinColumn(name="order_id", updatable = true)
 	private Order itemOrder;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="status_id", updatable = true)
+	private Status itemStatus;
 	
 	@PrePersist
 	protected void onCreate() {
@@ -146,6 +150,14 @@ public class Item {
 
 	public void setItemOrder(Order itemOrder) {
 		this.itemOrder = itemOrder;
+	}
+
+	public Status getItemStatus() {
+		return itemStatus;
+	}
+
+	public void setItemStatus(Status itemStatus) {
+		this.itemStatus = itemStatus;
 	}
 	
 	

@@ -22,6 +22,14 @@ public class ProductService {
 	}
 	
 	// Color combo methods
+	public List<Color> getAllColors(){
+		return (List<Color>) cRepo.findAll();
+	}
+	
+	public Color getColorById(Long id) {
+		return cRepo.findById(id).get();
+	}
+	
 	public void newColor(String letterColor, String bgColor, String frameColor) {
 		Color newColor = new Color();		
 		if(frameColor.isEmpty()) {
@@ -34,6 +42,7 @@ public class ProductService {
 		}
 		cRepo.save(newColor);		
 	}
+	
 	
 	public List<Color> findColorsNotIn(Product product, List<Long> idList){
 		List<Long> currentIds = new ArrayList<>();
@@ -52,6 +61,14 @@ public class ProductService {
 	//Product methods
 	public void saveProduct(Product product) {
 		pRepo.save(product);
+	}
+	
+	public List<Product> getAllProducts(){
+		return (List<Product>) pRepo.findAll();
+	}
+	
+	public Product getProductById(Long id) {
+		return pRepo.findById(id).get();
 	}
 	
 	

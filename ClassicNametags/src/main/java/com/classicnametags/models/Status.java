@@ -34,6 +34,9 @@ public class Status {
 	@OneToMany(mappedBy="orderStatus", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Order> orders;
 	
+	@OneToMany(mappedBy="itemStatus", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Item> items;
+	
 	
 	@PrePersist
 	protected void onCreate() {

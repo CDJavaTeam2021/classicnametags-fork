@@ -1,16 +1,25 @@
 package com.classicnametags.controllers;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.classicnametags.models.Item;
+import com.classicnametags.models.Order;
 import com.classicnametags.models.User;
 import com.classicnametags.services.OrderService;
 import com.classicnametags.services.ProductService;
@@ -25,9 +34,49 @@ public class CustomerController {
 	UserService uServ;
 	@Autowired
 	ProductService pServ;
-
 	
-
+	//Order form
+	@GetMapping("/orders/items/new")
+	public String orderForm(Model viewModel, HttpSession session) {
+		viewModel.addAttribute("allProducts", pServ.getAllProducts());
+		viewModel.addAttribute("allColors", pServ.getAllColors());
+		
+		return "newOrder.jsp";
+	}
+	
+	//Add items to cart
+	@PostMapping("/orders/items/new")
+	public String addToCart(HttpSession session, 
+			@RequestParam("itemProduct") String prodIdS,
+			@RequestParam("line1") String line1,
+			@RequestParam("line2") String line2,
+			@RequestParam("itemColor") String colorIdS,
+			@RequestParam("quantity") String quantity) {
+		
+		oServ.addItemToCart(session, prodIdS, colorIdS, line1, line2, quantity);
+		
+	
+		return "redirect:/orders/items/new";
+		
+	}
+	
+	//Checkout
+	@PostMapping("/orders/items/checkout")
+	public String checkout(HttpSession session, Model model) {
+		Order order = oServ.checkout(session);
+		Long orderId = order.getId();
+		return "redirect:/orders/"+ orderId + "/submitted";		
+	}
+	
+	@GetMapping("/orders/{id}/submitted")
+	public String submitted(Model viewModel, @PathVariable("id") long orderId) {
+		Order myOrder = oServ.findOrderById(orderId);
+		viewModel.addAttribute("myOrder", myOrder);
+		Date due = myOrder.getDueDate();
+		String formattedDate = oServ.convertDate(due);
+		viewModel.addAttribute("due", formattedDate);
+		return "orderSubmission.jsp";
+	}
 	
 
 }

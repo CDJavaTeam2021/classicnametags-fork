@@ -36,6 +36,10 @@ public class Order {
 	
 	private Date dueDate;
 	
+	private float orderTotal;
+	
+	private int estDuration;
+	
 	//Relationship attributes
 	
 	@OneToMany(mappedBy="itemOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -46,7 +50,7 @@ public class Order {
 	private Status orderStatus;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="user_id", updatable = false)
+	@JoinColumn(name="user_id", updatable = true)
 	private User customer;
 	
 	
@@ -130,6 +134,22 @@ public class Order {
 
 	public void setCustomer(User customer) {
 		this.customer = customer;
+	}
+
+	public float getOrderTotal() {
+		return orderTotal;
+	}
+
+	public void setOrderTotal(float orderTotal) {
+		this.orderTotal = orderTotal;
+	}
+
+	public int getEstDuration() {
+		return estDuration;
+	}
+
+	public void setEstDuration(int estDuration) {
+		this.estDuration = estDuration;
 	}
 	
 	
