@@ -126,13 +126,29 @@ public class OrderService {
 		
 		//
 		
+		order.setOpen(true);
+		
 		Long userId = (Long) session.getAttribute("userId");
 		order.setCustomer(uServ.findUserById(userId));
 		oRepo.save(order);
+		
+		emptyCart(session);
+		
+		return order;
+	}
+	
+	public List<Order> getOpenOrders(){
+		for(Order order : oRepo.findByOpenIsOrderByDueDate(true)) {
+			order.setDueDateString(convertDate(order.getDueDate()));
+		}		
+		return oRepo.findByOpenIsOrderByDueDate(true);
+	}
+	
+	//Empty the cart
+	public void emptyCart(HttpSession session) {
 		List<Item> empty = new ArrayList<Item>();
 		session.setAttribute("myCart", empty);
 		session.setAttribute("cartTotal", 0f);
-		return order;
 	}
 	
 	public Order findOrderById(Long id) {

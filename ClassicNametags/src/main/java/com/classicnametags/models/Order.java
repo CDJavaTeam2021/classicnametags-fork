@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -40,8 +41,15 @@ public class Order {
 	
 	private int estDuration;
 	
+	private Boolean open;
+	
+	@Transient
+	private String dueDateString;
+	
 	//Relationship attributes
 	
+	
+
 	@OneToMany(mappedBy="itemOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Item> items;
 	
@@ -82,6 +90,14 @@ public class Order {
 
 	public Date getCreatedAt() {
 		return createdAt;
+	}
+	
+	public Boolean getOpen() {
+		return open;
+	}
+
+	public void setOpen(Boolean open) {
+		this.open = open;
 	}
 
 	public void setCreatedAt(Date createdAt) {
@@ -150,6 +166,14 @@ public class Order {
 
 	public void setEstDuration(int estDuration) {
 		this.estDuration = estDuration;
+	}
+
+	public String getDueDateString() {
+		return dueDateString;
+	}
+
+	public void setDueDateString(String dueDateString) {
+		this.dueDateString = dueDateString;
 	}
 	
 	

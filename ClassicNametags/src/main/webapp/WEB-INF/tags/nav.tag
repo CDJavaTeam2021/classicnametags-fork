@@ -20,15 +20,15 @@
 		<div class="jumbotron jumbotron-fluid">
 			<div class="container">
 				<div class="jumboText">
-					<h1 class="display-4">Classic Nametags</h1>
+					<h1 class="display-4"><img src="/images/cntLogo.png" alt="Classic Nametags"></h1>
 					<c:choose>
 						<c:when test="${sessionScope.permissions == 'admin'}">
 							<p>Welcome, ${sessionScope.userName }</p>
-							<a href="/orders/items/new">New Order</a> | <a href="/products">Product Management</a> | <a href="/admin">Admin Tools</a> | <a href="/logout">Logout</a>
+							<a href="/orders/items/new">New Order</a> | <a href="/products">Product Management</a> | <a href="/orders/queue">Open Order Queue</a> | <a href="/admin">Admin Tools</a> | <a href="/logout">Logout</a>
 						</c:when>
 						<c:when test="${sessionScope.permissions == 'employee'}">
 							<p>Welcome, ${sessionScope.userName }</p>
-							<a href="/orders/items/new">New Order</a> | <a href="/products">Product Management</a> | <a href="/logout">Logout</a>
+							<a href="/orders/items/new">New Order</a> | <a href="/products">Product Management</a> | <a href="/orders/queue">Open Order Queue</a> | <a href="/logout">Logout</a>
 						</c:when>
 						<c:when test="${sessionScope.permissions == 'customer' && sessionScope.loggedIn == true}">
 							<p>Welcome, ${sessionScope.userName }</p>

@@ -11,5 +11,7 @@ import com.classicnametags.models.Order;
 public interface OrderRepository extends CrudRepository<Order, Long> {
 	
 	List<Order> findByIdNotIn(List<Long> status4List);
+	
+	List<Order> findByOpenIsOrderByDueDate(Boolean openState);
 
 }

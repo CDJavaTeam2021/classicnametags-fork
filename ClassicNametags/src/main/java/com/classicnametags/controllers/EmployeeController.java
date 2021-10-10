@@ -102,6 +102,16 @@ public class EmployeeController {
 			return "redirect:/";
 		}
 	}
+	
+	@GetMapping("/orders/queue")
+	public String openOrderQueue(HttpSession session, Model viewModel) {
+		if(uServ.isAdmin(session) || uServ.isEmployee(session)) {
+			viewModel.addAttribute("openOrders", oServ.getOpenOrders());
+			return "openOrders.jsp";
+		} else {
+			return "redirect:/";
+		}
+	}
 
 
 }
