@@ -41,15 +41,21 @@ public class OrderService {
 		this.iRepo = iRepo;
 		this.pServ = pServ;
 		this.uServ = uServ;
+
+
 		for(Order order : oRepo.findAll()) {
-			this.estQueueTime += order.getEstDuration();
+			if(order.getOrderStatus().getId() < 4) {
+				this.estQueueTime += order.getEstDuration();
+			}
+			
 		}
+
 		System.out.println("Estimated queue time = " + estQueueTime + " minutes.");
 	}
 	
 	//Helper function to convert dates to short date with time (10/9/21 3:12PM)
 	public String convertDate(Date date) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy h:ma");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy hh:mma");
 		ZoneId defaultZoneId = ZoneId.systemDefault();
 		Instant instant = date.toInstant();
 		LocalDateTime localDate = instant.atZone(defaultZoneId).toLocalDateTime();
