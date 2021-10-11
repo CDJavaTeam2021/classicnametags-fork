@@ -26,61 +26,50 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
-					<h2>Open Order Queue</h2>
+					<h2>Order ${thisOrder.orderNumber}</h2>
+					<h3>Promise Time: ${thisOrder.dueDateString }</h3>
+					<h3>Order Status: ${thisOrder.orderStatus.description }</h3>
+					<c:choose>
+						<c:when test="${sessionScope.permissions == 'admin' || sessionScope.permissions == 'employee'}">
+							<form action="/orders/${thisOrder.id }/confirm" method="post">
+								<input type="datetime-local" value="${htmlDueDate }" name="confirmDue">
+								<button>Confirm Order</button>
+							</form>
+						</c:when>
+					</c:choose>
 				</div>
 			</div>
+
 			<div class="row">
 				<div class="col-12">
 					<table class="table">
 						<thead>
-							<tr>
-								<th>Order number</th>
-								<th>Product</th>
-								<th>Color</th>
-								<th>Lines</th>
-								<th>Quantity</th>
-								<th>Item Status</th>
-								<th>Order Status</th>
-								<th>Due date</th>
-								<th>Actions</th>
-								
-							</tr>
+							<tr><th>Item</th><th>Text</th><th>Color</th><th>Quantity</th><th>Price</th><th>Action</th></tr>
 						</thead>
 						<tbody>
-							<c:forEach items="${openOrders }" var="order">
-								<c:forEach items="${order.items}" var="item">
-									<tr>
-										<td><a href="/orders/${order.id}/view/${order.orderNumber}">${order.orderNumber}</a></td>
-										<td>${item.itemProduct.type }</td>
-										<td>${item.itemColor.colorName }</td>
-										<td>
-											<p>Line 1: ${item.line1 }</p>
-											<p>Line 2: ${item.line2 }</p>
-										</td>
-										<td>${item.quantity }</td>
-										<td>${item.itemStatus.description }</td>
-										<td>${order.orderStatus.description}</td>
-										<td>${order.dueDateString }</td>
-										<td>
-											<c:choose>
+							<c:forEach items="${thisOrder.items }" var="item">
+								<tr>
+									<td>${item.itemProduct.type }</td>
+									<td><p>Line 1: ${item.line1}</p><p>Line 2: ${item.line2}</p></td>
+									<td>${item.itemColor.colorName}</td>
+									<td>${item.quantity}</td>
+									<td>$${item.subtotal }0</td>
+									<td>
+										<c:choose>
 												<c:when test="${item.itemStatus.id < 4 }">
-													<form action="/orders/item/${item.id}/complete/queue" method="post">
+													<form action="/orders/item/${item.id}/complete/${thisOrder.id}/view" method="post">
 														<button>Complete Item</button>
 													</form>
 												</c:when>
 											</c:choose>
-										</td>
-									</tr>
-								</c:forEach>
+									</td>
+								</tr>
 							</c:forEach>
 						</tbody>
-					</table>					
-
-
-
+					</table>
+					<p>Subtotal: $${thisOrder.orderTotal}0</p>
 				</div>
 			</div>
-
 		</div>
 	</t:nav>
 </body>

@@ -1,5 +1,6 @@
 package com.classicnametags.services;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -63,15 +64,30 @@ public class OrderService {
 		return formattedDate;
 	}
 	
+	//helper method to convert datetime to a string format HTML can process
+	public String htmlDate(Date date) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'kk:mm");
+		ZoneId defaultZoneId = ZoneId.systemDefault();
+		Instant instant = date.toInstant();
+		LocalDateTime localDate = instant.atZone(defaultZoneId).toLocalDateTime();
+		String formattedDate = localDate.format(formatter);
+		return formattedDate;
+	}
+	
 	//Helper method to get now
 	public Date getNow() {
 		LocalDateTime now = LocalDateTime.now();
 		ZoneId defaultZoneId = ZoneId.systemDefault();
 		ZonedDateTime zonedDateTime = now.atZone(defaultZoneId);  //atStartOfDay(defaultZoneId);
 		Date today = Date.from(zonedDateTime.toInstant());
-		return today;
-		
-		
+		return today;		
+	}
+	
+	//Helper method to convert HTML datetime format to Date format (2021-10-10T16:01 to 2021-10-10 16:01:41.279)
+	public Date htmlStringToDate(String htmlDate) {
+		LocalDateTime dateTime = LocalDateTime.parse(htmlDate);
+		Date formattedDate = java.sql.Timestamp.valueOf(dateTime);
+		return formattedDate;
 	}
 	
 	//Status Methods
@@ -137,11 +153,27 @@ public class OrderService {
 		return order;
 	}
 	
+	public Order findOrderById(Long id) {
+		Order order = oRepo.findById(id).get();
+		order.setDueDateString(convertDate(order.getDueDate()));
+		return oRepo.findById(id).get();
+	}
+	
 	public List<Order> getOpenOrders(){
 		for(Order order : oRepo.findByOpenIsOrderByDueDate(true)) {
 			order.setDueDateString(convertDate(order.getDueDate()));
 		}		
 		return oRepo.findByOpenIsOrderByDueDate(true);
+	}
+	
+	public void confirmOrder(String orderIdS, String htmlDueDate) {
+		Long orderId = Long.valueOf(orderIdS);
+		Order order = findOrderById(orderId);
+		order.setDueDate(htmlStringToDate(htmlDueDate));
+		if(order.getOrderStatus().getId() < 2) {
+			order.setOrderStatus(sRepo.findById((long)2).get());
+		}
+		oRepo.save(order);		
 	}
 	
 	//Empty the cart
@@ -151,9 +183,7 @@ public class OrderService {
 		session.setAttribute("cartTotal", 0f);
 	}
 	
-	public Order findOrderById(Long id) {
-		return oRepo.findById(id).get();
-	}
+	
 	
 
 	
@@ -182,6 +212,19 @@ public class OrderService {
 		total += cost;
 		session.setAttribute("cartTotal", total);
 		
+	}
+	
+	public void completeItem(String itemIdS) {
+		Long itemId = Long.valueOf(itemIdS);
+		//find the item by ID, set its status to status 4 (completed)
+		Item item = iRepo.findById(itemId).get();
+		item.setItemStatus(sRepo.findById((long)4).get());
+		if(item.getItemOrder().getOrderStatus().getId() < 3) {
+			Order order = item.getItemOrder();
+			order.setOrderStatus(sRepo.findById((long)3).get());
+			oRepo.save(order);
+		}
+		iRepo.save(item);		
 	}
 
 

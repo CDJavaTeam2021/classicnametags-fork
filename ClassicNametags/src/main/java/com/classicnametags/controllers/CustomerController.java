@@ -69,13 +69,41 @@ public class CustomerController {
 	}
 	
 	@GetMapping("/orders/{id}/submitted")
-	public String submitted(Model viewModel, @PathVariable("id") long orderId) {
+	public String submitted(Model viewModel, @PathVariable("id") long orderId, HttpSession session) {
 		Order myOrder = oServ.findOrderById(orderId);
-		viewModel.addAttribute("myOrder", myOrder);
-		Date due = myOrder.getDueDate();
-		String formattedDate = oServ.convertDate(due);
-		viewModel.addAttribute("due", formattedDate);
-		return "orderSubmission.jsp";
+		if((Boolean)session.getAttribute("loggedIn") == false) {
+			return "redirect:/";
+		} else if (session.getAttribute("permissions").equals("customer") && 
+				(long)session.getAttribute("userId") != myOrder.getCustomer().getId() ) {
+			return "redirect:/";
+		} else {
+			viewModel.addAttribute("myOrder", myOrder);
+			Date due = myOrder.getDueDate();
+			String formattedDate = oServ.convertDate(due);
+			viewModel.addAttribute("due", formattedDate);
+			return "orderSubmission.jsp";
+		}
+	}
+	
+	@GetMapping("/orders/{orderId}/view/{orderNumber}")
+	public String viewOrder(HttpSession session, @PathVariable("orderId") long orderId, Model viewModel) {
+		Order order = oServ.findOrderById(orderId);
+		if((Boolean)session.getAttribute("loggedIn") == false) {
+			return "redirect:/";
+		} else if (session.getAttribute("permissions").equals("customer") && 
+				(long)session.getAttribute("userId") != order.getCustomer().getId() ) {
+			return "redirect:/";
+		} else {
+			viewModel.addAttribute("thisOrder", order);
+			System.out.println(oServ.htmlDate(order.getDueDate()));
+			viewModel.addAttribute("htmlDueDate", oServ.htmlDate(order.getDueDate()));
+			
+			return "orderView.jsp";
+		}
+		
+		
+		
+		
 	}
 	
 
