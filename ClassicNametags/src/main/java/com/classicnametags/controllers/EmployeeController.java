@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.classicnametags.models.User;
 import com.classicnametags.models.Product;
 import com.classicnametags.models.Color;
+import com.classicnametags.models.Order;
 import com.classicnametags.services.OrderService;
 import com.classicnametags.services.ProductService;
 import com.classicnametags.services.UserService;
@@ -111,6 +113,20 @@ public class EmployeeController {
 		} else {
 			return "redirect:/";
 		}
+	}
+	
+	@PostMapping("/orders/{order_id}/confirm")
+	public String confirmOrder(
+			@PathVariable("order_id") String orderIdS, 
+			@RequestParam("confirmDue") String confirmDue ) {
+		oServ.confirmOrder(orderIdS, confirmDue);		
+		return "redirect:/orders/{order_id}/view/confirmed";
+	}
+	
+	@PostMapping("/orders/item/{item_id}/complete/{origin}")
+	public String completeItem(@PathVariable("item_id")String itemIdS) {
+		oServ.completeItem(itemIdS);
+		return "redirect:/orders/{origin}";
 	}
 
 
