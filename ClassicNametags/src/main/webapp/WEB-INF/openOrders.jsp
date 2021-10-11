@@ -28,7 +28,7 @@
 				<div class="col-12">
 					<h2>Open Order Queue</h2>
 					<h3>Current estimated queue time: ${queueTime} minutes:</h3>
-					<h3>${errorString}</h3>
+					<h3 class="errorMsg">${errorString}</h3>
 				</div>
 			</div>
 			<div class="row">
@@ -51,7 +51,7 @@
 						<tbody>
 							<c:forEach items="${openOrders }" var="order">
 								<c:forEach items="${order.items}" var="item">
-									<tr>
+									<tr class="${item.itemStatus.description }">
 										<td><a href="/orders/${order.id}/view/${order.orderNumber}">${order.orderNumber}</a></td>
 										<td>${item.itemProduct.type }</td>
 										<td>${item.itemColor.colorName }</td>

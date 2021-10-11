@@ -24,34 +24,42 @@
 
 	<t:nav>
 		<div class="container">
-			<div class="row">
-				<div class="col-12">
-					<h2>New Item</h2>
-				</div>
-			</div>
+			
 			<div class="row">
 				<div class="col-6">
-					<form action="/orders/items/new" method="post">
-						<label for="product">Choose a Product:</label>
-						<select name="itemProduct" id="product">
-							<c:forEach items="${allProducts}" var="product">
-								<option value="${product.id}">${product.type} $${product.price}0</option>
-							</c:forEach>
-						</select>
+					<h2>New Item</h2>
+					<form action="/orders/items/new" method="post" id="orderForm">
+						<div>
+							<label for="product">Choose a Product:</label> <select
+								name="itemProduct" id="product">
+								<c:forEach items="${allProducts}" var="product">
+									<option value="${product.id}">${product.type}
+										$${product.price}0</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div>
+							<label for="itemColor">Choose Color Combination:</label> <select
+								name="itemColor" id="itemColor">
+								<!-- TODO build asynchronous function to pull only available colors -->
+								<c:forEach items="${allColors }" var="color">
+									<option value="${color.id }">${color.colorName }</option>
+								</c:forEach>
+							</select>
+						</div>
 						<input name="line1" placeholder="Line 1">
 						<input name="line2" placeholder="line 2">
-						<select name="itemColor"><!-- TODO build asynchronous function to pull only available colors -->
-							<c:forEach items="${allColors }" var="color">
-								<option value="${color.id }">${color.colorName }</option>
-							</c:forEach>
-						</select>
-						<label for="quantity">Quantity</label>
-						<input type="number" min="1" value="1" step="1" name="quantity" id="quantity">
+						<div>
+							<label for="quantity">Quantity</label>
+							<input type="number" min="1" value="1" step="1" name="quantity" id="quantity">
+						</div>
 						<button>Add to Cart</button> 
 					</form>
 				</div>
 				<div class="col-6">
-				<h3>Preview</h3>
+					<h3>Preview</h3>
+					<div class="previewWindow">
+					</div>
 				</div>
 			</div>
 			<div class="row">

@@ -1,3 +1,27 @@
 .jumbotron, #footer {
 	background-color: WhiteSmoke;
 }
+
+.errorMsg {
+	color: red;
+}
+
+.Complete {
+	background-color: LightGreen;
+}
+
+#orderForm {
+	background-color: azure;
+	border: solid 1px black;
+	padding: 5px;
+	height: 300px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+}
+
+.previewWindow {
+	border: solid 1px black;
+	padding: 5px;
+	height: 300px;
+}

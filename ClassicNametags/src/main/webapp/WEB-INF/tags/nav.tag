@@ -43,12 +43,6 @@
 							<a href="/register">Register</a>
 						</c:otherwise>
 					</c:choose>
-
-
-
-
-
-
 				</div>
 			</div>
 		</div>
