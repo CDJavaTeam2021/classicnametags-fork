@@ -29,11 +29,25 @@
 					<h2>Order ${thisOrder.orderNumber}</h2>
 					<h3>Promise Time: ${thisOrder.dueDateString }</h3>
 					<h3>Order Status: ${thisOrder.orderStatus.description }</h3>
+					<p>Customer: ${thisOrder.customer.userName }</p>
+					<p>Contact Phone for this Order: ${thisOrder.contactPhone } Default Phone: ${thisOrder.customer.phone } </p>
+					<p>Contact Email for this Order: ${thisOrder.contactEmail } Default Email: ${thisOrder.customer.userEmail }</p>
 					<c:choose>
-						<c:when test="${sessionScope.permissions == 'admin' || sessionScope.permissions == 'employee'}">
+						<c:when
+							test="${sessionScope.permissions == 'admin' || sessionScope.permissions == 'employee'}">
 							<form action="/orders/${thisOrder.id }/confirm" method="post">
-								<input type="datetime-local" value="${htmlDueDate }" name="confirmDue">
+								<input type="datetime-local" value="${htmlDueDate }"
+									name="confirmDue">
 								<button>Confirm Order</button>
+							</form>
+						</c:when>
+					</c:choose>
+					<c:choose>
+						<c:when test="${thisOrder.open == true && (sessionScope.permissions == 'admin' || sessionScope.permissions == 'employee')}">
+							<form action="/orders/${thisOrder.id}/close" method="post">
+								<input type="hidden" name="origin" value="${thisOrder.id }">
+								<button>Complete Order</button>
+								<h3>${errorString}</h3>
 							</form>
 						</c:when>
 					</c:choose>
@@ -56,13 +70,13 @@
 									<td>$${item.subtotal }0</td>
 									<td>
 										<c:choose>
-												<c:when test="${item.itemStatus.id < 4 }">
+												<c:when test="${item.itemStatus.id < 4 && (sessionScope.permissions == 'admin' || sessionScope.permissions == 'employee')}">
 													<form action="/orders/item/${item.id}/complete" method="post">
 														<input type="hidden" name="origin" value="${thisOrder.id }">
 														<button>Complete Item</button>
 													</form>
 												</c:when>
-											</c:choose>
+										</c:choose>
 									</td>
 								</tr>
 							</c:forEach>

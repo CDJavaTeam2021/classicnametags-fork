@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.classicnametags.models.User;
 import com.classicnametags.models.Product;
@@ -109,6 +110,7 @@ public class EmployeeController {
 	public String openOrderQueue(HttpSession session, Model viewModel) {
 		if(uServ.isAdmin(session) || uServ.isEmployee(session)) {
 			viewModel.addAttribute("openOrders", oServ.getOpenOrders());
+			viewModel.addAttribute("queueTime", oServ.getQueueTime());
 			return "openOrders.jsp";
 		} else {
 			return "redirect:/";
@@ -124,15 +126,48 @@ public class EmployeeController {
 	}
 	
 	@PostMapping("/orders/item/{item_id}/complete")
-	public String completeItem(@PathVariable("item_id")String itemIdS, @RequestParam("origin") String origin) {
+	public String completeItem(@PathVariable("item_id")String itemIdS, 
+			@RequestParam("origin") String origin) {
 		oServ.completeItem(itemIdS);
 		if(origin.equals("queue")) {
 			return "redirect:/orders/queue";
 		} else {
 			return "redirect:/orders/"+ origin +"/view/viewOrder";
 		}
-		
 	}
+	
+	@RequestMapping("/orders/{order_id}/close")
+	public String closeOrder(@PathVariable("order_id") String orderIdS, 
+			@RequestParam("origin") String origin, Model viewModel, RedirectAttributes redAttr) {
+		if(origin.equals("queue")) {
+			if(oServ.completeOrder(orderIdS)) {
+				return "redirect:/orders/queue";
+			} else {
+				redAttr.addFlashAttribute("errorString", "All items must be completed first!");
+				return "redirect:/orders/queue";
+			} 
+		} else {
+			if(oServ.completeOrder(orderIdS)) {
+				return "redirect:/orders/" + origin + "/view/viewOrder";
+			} else {
+				//fail
+				redAttr.addFlashAttribute("errorString", "All items must be completed first!");
+				return "redirect:/orders/{order_id}/view/error";
+			}
+		}
+	}
+	
+	@GetMapping("orders/all_orders")
+	public String viewMyOrders(HttpSession session, Model viewModel) {
+		if(uServ.isAdmin(session) || uServ.isEmployee(session)) {
+			viewModel.addAttribute("allOrders", oServ.getAllOrders());
+			return "orderHistory.jsp";
+		} else {
+			return "redirect:/";
+		}
+	}
+	
+	
 
 
 }

@@ -73,7 +73,14 @@
 						</tbody>
 					</table>
 					<p>Subtotal: $${sessionScope.cartTotal }0</p>
+					<p>Tax: 9.25%</p>
+					<p>Total with Tax: $${sessionScope.cartTotal * 1.0925 }0</p>
 					<form action="/orders/items/checkout" method="post">
+						Confirm contact info:
+						<label for="orderEmail">Email:</label>
+						<input type="email" value="${sessionScope.myEmail }" name="orderEmail" id="orderEmail">
+						<label for="orderPhone">Phone:</label>
+						<input value="${sessionScope.myPhone }" name="orderPhone" id="orderPhone">
 						<button>Checkout</button>
 					</form>
 				</div>

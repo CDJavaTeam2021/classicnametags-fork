@@ -43,6 +43,10 @@ public class Order {
 	
 	private Boolean open;
 	
+	private String contactPhone;
+	
+	private String contactEmail;
+	
 	@Transient
 	private String dueDateString;
 	
@@ -174,6 +178,22 @@ public class Order {
 
 	public void setDueDateString(String dueDateString) {
 		this.dueDateString = dueDateString;
+	}
+
+	public String getContactPhone() {
+		return contactPhone;
+	}
+
+	public void setContactPhone(String contactPhone) {
+		this.contactPhone = contactPhone;
+	}
+
+	public String getContactEmail() {
+		return contactEmail;
+	}
+
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
 	}
 	
 	

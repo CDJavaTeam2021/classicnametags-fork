@@ -26,9 +26,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
-					<h2>Open Order Queue</h2>
-					<h3>Current estimated queue time: ${queueTime} minutes:</h3>
-					<h3>${errorString}</h3>
+					<h2>Order History</h2>
 				</div>
 			</div>
 			<div class="row">
@@ -44,12 +42,11 @@
 								<th>Item Status</th>
 								<th>Order Status</th>
 								<th>Due date</th>
-								<th>Actions</th>
 								
 							</tr>
 						</thead>
 						<tbody>
-							<c:forEach items="${openOrders }" var="order">
+							<c:forEach items="${allOrders }" var="order">
 								<c:forEach items="${order.items}" var="item">
 									<tr>
 										<td><a href="/orders/${order.id}/view/${order.orderNumber}">${order.orderNumber}</a></td>
@@ -63,24 +60,6 @@
 										<td>${item.itemStatus.description }</td>
 										<td>${order.orderStatus.description}</td>
 										<td>${order.dueDateString }</td>
-										<td>
-											<c:choose>
-												<c:when test="${item.itemStatus.id < 4 }">
-													<form action="/orders/item/${item.id}/complete" method="post">
-														<input type="hidden" name="origin" value="queue">
-														<button>Complete Item</button>
-													</form>
-												</c:when>
-											</c:choose>
-											<c:choose>
-												<c:when test="${order.open == true }">
-													<form action="/orders/${order.id}/close" method="post">
-														<input type="hidden" name="origin" value="queue">
-														<button>Close Order</button>
-													</form>
-												</c:when>
-											</c:choose>
-										</td>
 									</tr>
 								</c:forEach>
 							</c:forEach>

@@ -23,16 +23,16 @@
 					<h1 class="display-4"><img src="/images/cntLogo.png" alt="Classic Nametags"></h1>
 					<c:choose>
 						<c:when test="${sessionScope.permissions == 'admin'}">
-							<p>Welcome, ${sessionScope.userName }</p>
-							<a href="/orders/items/new">New Order</a> | <a href="/products">Product Management</a> | <a href="/orders/queue">Open Order Queue</a> | <a href="/admin">Admin Tools</a> | <a href="/logout">Logout</a>
+							<p>Welcome, ${sessionScope.userName } (Admin Permissions)</p>
+							<a href="/orders/items/new">New Order</a> | <a href="/orders/my_orders">My Order History</a> | <a href="/orders/all_orders">Order History</a> | <a href="/products">Product Management</a> | <a href="/orders/queue">Open Order Queue</a> | <a href="#">Admin Tools</a> | <a href="/logout">Logout</a>
 						</c:when>
 						<c:when test="${sessionScope.permissions == 'employee'}">
-							<p>Welcome, ${sessionScope.userName }</p>
-							<a href="/orders/items/new">New Order</a> | <a href="/products">Product Management</a> | <a href="/orders/queue">Open Order Queue</a> | <a href="/logout">Logout</a>
+							<p>Welcome, ${sessionScope.userName } (Employee Permissions)</p>
+							<a href="/orders/items/new">New Order</a> | <a href="/orders/my_orders">My Order History</a> | <a href="/orders/all_orders">Order History</a> | <a href="/products">Product Management</a> | <a href="/orders/queue">Open Order Queue</a> | <a href="/logout">Logout</a>
 						</c:when>
 						<c:when test="${sessionScope.permissions == 'customer' && sessionScope.loggedIn == true}">
 							<p>Welcome, ${sessionScope.userName }</p>
-							<a href="/orders/items/new">New Order</a> | <a href="/logout">Logout</a>
+							<a href="/orders/items/new">New Order</a> | <a href="/orders/my_orders">My Order History</a> | <a href="/logout">Logout</a>
 						</c:when>
 						<c:otherwise>
 							<form action="/login" method="post">
