@@ -64,7 +64,8 @@
 										<td>
 											<c:choose>
 												<c:when test="${item.itemStatus.id < 4 }">
-													<form action="/orders/item/${item.id}/complete/queue" method="post">
+													<form action="/orders/item/${item.id}/complete" method="post">
+														<input type="hidden" name="origin" value="queue">
 														<button>Complete Item</button>
 													</form>
 												</c:when>

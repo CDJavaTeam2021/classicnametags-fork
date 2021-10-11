@@ -123,10 +123,15 @@ public class EmployeeController {
 		return "redirect:/orders/{order_id}/view/confirmed";
 	}
 	
-	@PostMapping("/orders/item/{item_id}/complete/{origin}")
-	public String completeItem(@PathVariable("item_id")String itemIdS) {
+	@PostMapping("/orders/item/{item_id}/complete")
+	public String completeItem(@PathVariable("item_id")String itemIdS, @RequestParam("origin") String origin) {
 		oServ.completeItem(itemIdS);
-		return "redirect:/orders/{origin}";
+		if(origin.equals("queue")) {
+			return "redirect:/orders/queue";
+		} else {
+			return "redirect:/orders/"+ origin +"/view/viewOrder";
+		}
+		
 	}
 
 

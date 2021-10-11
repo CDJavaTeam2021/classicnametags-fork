@@ -57,7 +57,8 @@
 									<td>
 										<c:choose>
 												<c:when test="${item.itemStatus.id < 4 }">
-													<form action="/orders/item/${item.id}/complete/${thisOrder.id}/view" method="post">
+													<form action="/orders/item/${item.id}/complete" method="post">
+														<input type="hidden" name="origin" value="${thisOrder.id }">
 														<button>Complete Item</button>
 													</form>
 												</c:when>
