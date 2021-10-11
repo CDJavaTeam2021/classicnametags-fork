@@ -62,8 +62,11 @@ public class CustomerController {
 	
 	//Checkout
 	@PostMapping("/orders/items/checkout")
-	public String checkout(HttpSession session, Model model) {
-		Order order = oServ.checkout(session);
+	public String checkout(HttpSession session, 
+			Model model, 
+			@RequestParam("orderEmail") String orderEmail,
+			@RequestParam("orderPhone") String orderPhone) {
+		Order order = oServ.checkout(session, orderEmail, orderPhone);
 		Long orderId = order.getId();
 		return "redirect:/orders/"+ orderId + "/submitted";		
 	}
@@ -95,16 +98,26 @@ public class CustomerController {
 			return "redirect:/";
 		} else {
 			viewModel.addAttribute("thisOrder", order);
-			System.out.println(oServ.htmlDate(order.getDueDate()));
 			viewModel.addAttribute("htmlDueDate", oServ.htmlDate(order.getDueDate()));
 			
 			return "orderView.jsp";
 		}
-		
-		
-		
-		
 	}
+		
+	@GetMapping("orders/my_orders")
+	public String viewMyOrders(HttpSession session, Model viewModel) {
+		if((Boolean)session.getAttribute("loggedIn") == false) {
+			return "redirect:/";
+		} else {
+			User user = uServ.findUserById((long)session.getAttribute("userId"));
+			viewModel.addAttribute("allOrders", user.getOrders());
+			return "orderHistory.jsp";
+		}
+	}
+		
+		
+		
+	
 	
 
 }

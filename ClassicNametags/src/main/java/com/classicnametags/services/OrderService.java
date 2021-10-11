@@ -90,6 +90,10 @@ public class OrderService {
 		return formattedDate;
 	}
 	
+	public int getQueueTime() {
+		return this.estQueueTime;
+	}
+	
 	//Status Methods
 	public Status findStatusById(Long id) {
 		// id 1 = New
@@ -100,7 +104,11 @@ public class OrderService {
 	}
 	
 	//Order methods
-	public Order checkout(HttpSession session) {
+	public List<Order> getAllOrders() {
+		return (List<Order>) oRepo.findAll();
+	}
+	
+	public Order checkout(HttpSession session, String orderEmail, String orderPhone) {
 		Order order = new Order();
 		List<Item> newItems = (List<Item>) session.getAttribute("myCart");
 		order.setItems(newItems);
@@ -140,7 +148,10 @@ public class OrderService {
 		order.setDueDate(due);
 		
 		
-		//
+		// add contact info from customer
+		order.setContactEmail(orderEmail);
+		order.setContactPhone(orderPhone);
+		// 
 		
 		order.setOpen(true);
 		
@@ -174,6 +185,28 @@ public class OrderService {
 			order.setOrderStatus(sRepo.findById((long)2).get());
 		}
 		oRepo.save(order);		
+	}
+	
+	//Attempts to close order. Checks if there are open lines
+	//If there are open lines, returns false and leaves order unchanged
+	//Otherwise, closes order and return true
+	public Boolean completeOrder(String orderIdS) {
+		Long orderId = Long.valueOf(orderIdS);
+		Order order = oRepo.findById(orderId).get();
+		Boolean ended = false;
+		for(Item item : order.getItems()) {
+			if(item.getItemStatus().getId() == (long)1) {
+				return false;
+			} else {
+				order.setOrderStatus(sRepo.findById((long)4).get());
+				order.setOpen(false);
+				this.estQueueTime -= order.getEstDuration();
+				oRepo.save(order);
+				ended = true;
+			}
+		}
+		return ended;
+		
 	}
 	
 	//Empty the cart
@@ -226,7 +259,6 @@ public class OrderService {
 		}
 		iRepo.save(item);		
 	}
-
 
 
 }

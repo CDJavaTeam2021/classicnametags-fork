@@ -74,6 +74,8 @@ public class UserService {
 		session.setAttribute("loggedIn", true);
 		session.setAttribute("myCart", cart);
 		session.setAttribute("cartTotal", 0f);
+		session.setAttribute("myPhone", user.getPhone());
+		session.setAttribute("myEmail", user.getUserEmail());
 	}
 	
 	public void logout(HttpSession session) {
@@ -83,6 +85,8 @@ public class UserService {
 		session.setAttribute("loggedIn", false);
 		session.setAttribute("myCart", null);
 		session.setAttribute("cartTotal", 0f);
+		session.setAttribute("myPhone", "");
+		session.setAttribute("myEmail", "");
 	}
 	
 	public boolean isEmployee(HttpSession session) {
