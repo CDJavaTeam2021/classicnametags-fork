@@ -7,6 +7,7 @@
 <html>
 
 <head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -17,6 +18,7 @@
 <!-- Custom styles for this template -->
 <link href="signin.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="/css/stylesheet.css">
+<script src="/javascript/scripts.js"></script>
 <meta charset="ISO-8859-1">
 <title>Classic Nametags: New Order</title>
 </head>
@@ -39,16 +41,16 @@
 							</select>
 						</div>
 						<div>
-							<label for="itemColor">Choose Color Combination:</label> <select
-								name="itemColor" id="itemColor">
+							<label for="itemColor">Choose Color Combination:</label> 
+							<select onchange="pullColor()" onclick="pullColor()" name="itemColor" id="itemColor">
 								<!-- TODO build asynchronous function to pull only available colors -->
 								<c:forEach items="${allColors }" var="color">
 									<option value="${color.id }">${color.colorName }</option>
 								</c:forEach>
 							</select>
 						</div>
-						<input name="line1" placeholder="Line 1">
-						<input name="line2" placeholder="line 2">
+						<input name="line1" placeholder="Line 1" id="line1entry" onchange="line1get()">
+						<input name="line2" placeholder="line 2" id="line2entry" onchange="line2get()">
 						<div>
 							<label for="quantity">Quantity</label>
 							<input type="number" min="1" value="1" step="1" name="quantity" id="quantity">
@@ -59,6 +61,10 @@
 				<div class="col-6">
 					<h3>Preview</h3>
 					<div class="previewWindow">
+						<div id="previewNameTag">
+							<p id="previewLine1">Line 1<p>
+							<p id="previewLine2">Line 2</p>
+						</div>
 					</div>
 				</div>
 			</div>
